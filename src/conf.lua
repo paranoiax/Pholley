@@ -1,7 +1,7 @@
 function love.conf(t)
 
-	t.screen.width = 800
-	t.screen.height = 600
-	t.title = 'memeVolley'
+	t.screen.width = 1280
+	t.screen.height = 720
+	t.title = 'Pholley'
 
 end
