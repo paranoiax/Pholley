@@ -1,3 +1,5 @@
+require"TEsound"
+
 function love.load()
 
 	font = love.graphics.newFont(22)
@@ -59,6 +61,7 @@ function love.load()
 	objects.ball.body:setMass(0.215)
 	objects.ball.body:setGravityScale(2.0)
 	objects.ball.body:setLinearDamping(1.5)
+	objects.ball.body:setAngularDamping(1.5)
 	
 	objects.player1 = {}
 	objects.player1.body = love.physics.newBody(world, screenWidth / 8 * 3, screenHeight - 50, "dynamic")
@@ -84,19 +87,23 @@ function love.load()
 	objects.player1.score = 0
 	objects.player2.score = 0
 	
-	objects.player1.canJumpAgain = 0
-	objects.player2.canJumpAgain = 0	
-	
 	startgame = true
 	winner = 0
 	maxpoints = 10
 	
 	playerImage = love.graphics.newImage('sprites/player.png')
+	backgroundImage = love.graphics.newImage("sprites/bg.png")
+	playerShadow = love.graphics.newImage("sprites/player_shadow.png")
+	ballShadow = love.graphics.newImage("sprites/ball_shadow.png")
+	
+	jumpSound = "sounds/hit.wav"
+	hitSound = {"sounds/swoosh_1.wav", "sounds/swoosh_2.wav", "sounds/swoosh_3.wav", "sounds/swoosh_4.wav", }
 	
 end
 
 function love.update(dt)
 
+	TEsound.cleanup()
 	world:update(dt)
 	
 	if startgame == true then
@@ -118,27 +125,23 @@ function love.update(dt)
 		objects.ball.body:applyLinearImpulse(-64, 0)
 		begin_player_2 = false
 	end
-	
-	if objects.player1.body:getY() < screenHeight - screenHeight / 3.25 then
-		objects.player1.canJumpAgain = 1
-	end
-	
-	if objects.player2.body:getY() < screenHeight - screenHeight / 3.25 then
-		objects.player2.canJumpAgain = 1
-	end
 
 	increase_score()
 	player2_ai()
 	controls()
-
+	
+	i = 0
+	
 end
 
 function love.draw()
-
+	
+	love.graphics.setColor(255,255,255)
+	love.graphics.draw(backgroundImage, 0, 0)
+	
 	draw_winner()
 	draw_matchball()
 	
-	love.graphics.setColor(255,255,255)
 	love.graphics.setFont(font)
 	love.graphics.print(objects.player1.score, 20,15)
 	love.graphics.print(objects.player2.score, screenWidth -45,15)
@@ -147,12 +150,15 @@ function love.draw()
 	love.graphics.setColor(255,255,255)
 	love.graphics.polygon("fill", objects.mesh.body:getWorldPoints(objects.mesh.shape:getPoints()))
 	--love.graphics.polygon("fill", objects.seperator.body:getWorldPoints(objects.seperator.shape:getPoints()))
-	love.graphics.polygon("fill", objects.ground.body:getWorldPoints(objects.ground.shape:getPoints()))
-	love.graphics.polygon("fill", objects.leftWall.body:getWorldPoints(objects.leftWall.shape:getPoints()))
-	love.graphics.polygon("fill", objects.rightWall.body:getWorldPoints(objects.rightWall.shape:getPoints()))
-	love.graphics.polygon("fill", objects.ceiling.body:getWorldPoints(objects.ceiling.shape:getPoints()))
+	--love.graphics.polygon("fill", objects.ground.body:getWorldPoints(objects.ground.shape:getPoints()))
+	--love.graphics.polygon("fill", objects.leftWall.body:getWorldPoints(objects.leftWall.shape:getPoints()))
+	--love.graphics.polygon("fill", objects.rightWall.body:getWorldPoints(objects.rightWall.shape:getPoints()))
+	--love.graphics.polygon("fill", objects.ceiling.body:getWorldPoints(objects.ceiling.shape:getPoints()))
 	
 	love.graphics.setColor(255,255,255)
+	love.graphics.draw(playerShadow, objects.player1.body:getX() - 31, screenHeight - 32)
+	love.graphics.draw(playerShadow, objects.player2.body:getX() - 31, screenHeight - 32)
+	love.graphics.draw(ballShadow, objects.ball.body:getX() - 23, screenHeight - 30)
 	love.graphics.draw(objects.ball.image, objects.ball.body:getX() - 22, objects.ball.body:getY() - 22)
 	love.graphics.draw(playerImage, objects.player1.body:getX() - 33, objects.player1.body:getY() - 33)
 	love.graphics.draw(playerImage, objects.player2.body:getX() - 33, objects.player2.body:getY() - 33)
@@ -167,13 +173,14 @@ function love.draw()
 end
 
 function player2_ai()
-	if objects.ball.body:getX() > screenWidth / 2 and objects.ball.body:getX() +20 < objects.player2.body:getX() then
-		objects.player2.body:applyForce(-2300, 0)
-	elseif objects.ball.body:getX() > screenWidth / 2 and objects.ball.body:getX() +20 > objects.player2.body:getX() and objects.ball.body:getX() < screenWidth - 81 then
-		objects.player2.body:applyForce(2300, 0)
+	if objects.ball.body:getX() > screenWidth / 2 and objects.ball.body:getX() +18 < objects.player2.body:getX() then
+		objects.player2.body:applyForce(-2000, 0)--2300
+	elseif objects.ball.body:getX() > screenWidth / 2 and objects.ball.body:getX() +18 > objects.player2.body:getX() and objects.ball.body:getX() < screenWidth - 81 then
+		objects.player2.body:applyForce(2000, 0)--2300
 	end
-	if objects.ball.body:getX() > screenWidth / 2 and objects.ball.body:getY() > screenHeight - screenHeight / 3 and objects.player2.body:getY() > objects.ball.body:getY() and objects.ball.body:getX() - 50 < objects.player2.body:getX() and objects.ball.body:getX() + 50 > objects.player2.body:getX() then
-		objects.player2.body:applyLinearImpulse(0, -210)
+	if objects.ball.body:getX() > screenWidth / 2 and objects.ball.body:getY() > screenHeight - screenHeight / 3 and objects.player2.body:getY() > objects.ball.body:getY() and objects.ball.body:getX() - 40 < objects.player2.body:getX() and objects.ball.body:getX() + 40 > objects.player2.body:getX() and objects.player2.body:getY() > screenHeight - 55 then
+		objects.player2.body:applyLinearImpulse(0, -1300)
+		TEsound.playLooping(jumpSound, "sfx", 1)
 	elseif objects.ball.body:getX() < screenWidth / 2 - 40 and objects.player2.body:getX() < screenWidth / 4 * 3 - 50 then
 		objects.player2.body:applyForce(1850, 0)
 	elseif objects.ball.body:getX() < screenWidth / 2 - 40 and objects.player2.body:getX() > screenWidth / 4 * 3 + 50 then
@@ -185,8 +192,8 @@ function draw_winner()
 	if objects.player1.score >= maxpoints and objects.player1.score - objects.player2.score >= 2 then
 		love.graphics.setColor(255,255,255)
 		love.graphics.setFont(font2)
-		love.graphics.printf("Player 1 wins!", screenWidth / 4, screenHeight / 2, screenWidth / 2, 'center')
-		love.graphics.printf("Press 'R' to restart!", screenWidth / 4, screenHeight / 2 + 40, screenWidth / 2, 'center')
+		love.graphics.printf("Player 1 wins!", screenWidth / 4, screenHeight / 3 - 15, screenWidth / 2, 'center')
+		love.graphics.printf("Press 'R' to restart!", screenWidth / 4, screenHeight / 3 + 25, screenWidth / 2, 'center')
 		objects.ball.body:setActive(false)
 		objects.player1.body:setActive(false)
 		objects.player2.body:setActive(false)
@@ -196,8 +203,8 @@ function draw_winner()
 	elseif objects.player2.score >= maxpoints and objects.player2.score - objects.player1.score >= 2 then
 		love.graphics.setColor(255,255,255)
 		love.graphics.setFont(font2)
-		love.graphics.printf("Player 2 wins!", screenWidth / 4, screenHeight / 2, screenWidth / 2, 'center')
-		love.graphics.printf("Press 'R' to restart!", screenWidth / 4, screenHeight / 2 + 40, screenWidth / 2, 'center')
+		love.graphics.printf("Player 2 wins!", screenWidth / 4, screenHeight / 3 - 15, screenWidth / 2, 'center')
+		love.graphics.printf("Press 'R' to restart!", screenWidth / 4, screenHeight / 3 + 25, screenWidth / 2, 'center')
 		objects.ball.body:setActive(false)
 		objects.player1.body:setActive(false)
 		objects.player2.body:setActive(false)
@@ -221,11 +228,9 @@ end
 
 function controls()
 	function love.keypressed(key)
-		if objects.player1.body:getY() > screenHeight - 55 and key == "w" then
+		if objects.player1.body:getY() > screenHeight - 55 and key == "w" and winner == 0 then
 			objects.player1.body:applyLinearImpulse(0, -1300)
-		elseif objects.player1.canJumpAgain == 1 and key == "w" then
-			objects.player1.body:applyLinearImpulse(0, -500)
-			objects.player1.canJumpAgain = 0
+			TEsound.playLooping(jumpSound, "sfx", 1)
 		elseif key == "r" and winner == 1 then
 			objects.player1.score = 0
 			objects.player2.score = 0
@@ -249,10 +254,12 @@ function increase_score()
 		if objects.ball.body:getY() > screenHeight - 40 then
 			if objects.ball.body:getX() > screenWidth / 2 then
 				objects.player1.score = objects.player1.score + 1
+				TEsound.playLooping(hitSound, "sfx", 1)
 				startgame = true
 				begin_player_1 = true
 			elseif objects.ball.body:getX() < screenWidth / 2 then
 				objects.player2.score = objects.player2.score + 1
+				TEsound.playLooping(hitSound, "sfx", 1)
 				startgame = true
 				begin_player_2 = true
 			end
