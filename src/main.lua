@@ -3,11 +3,13 @@ require "objects"
 require "globals"
 require "functions"
 
-function love.load()
+HC = require 'hardoncollider'
 
-	load_settings()	
+function love.load()	
+
+	load_settings()
 	load_objects()
-	load_variables()	
+	load_variables()
 	
 end
 
@@ -23,6 +25,8 @@ function love.update(dt)
 	match_ball_sound()
 	player2_ai()
 	controls()
+	hardon_move()
+	Collider:update(dt)
 	
 end
 

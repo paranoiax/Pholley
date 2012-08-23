@@ -21,7 +21,7 @@ You do so by kicking the ball on the ground of the oppent's half.
 * D - Move to the right
 * R - Restart (After a round ended)
 
-### The Future
+## The Future
 
 There will be lots of things to be added. For example:
 
@@ -29,3 +29,10 @@ There will be lots of things to be added. For example:
 * A pause screen
 * the abbility to choose difficulty levels
 * The actual "theme" of the game may change completely...
+
+## Resources
+
+* [LÖVE](https://love2d.org/)
+* [HardonCollider](https://github.com/vrld/HardonCollider)
+* [Box2D](http://box2d.org/)
+* [TEsound](https://love2d.org/wiki/TEsound)

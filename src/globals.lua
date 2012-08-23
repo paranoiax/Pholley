@@ -11,11 +11,17 @@ end
 
 function load_variables()
 	gameOverSoundPlayed = false
+	
 	matchballActive = false
 	matchBallSoundPlayed = false
 	startgame = true
 	winner = 0
 	maxpoints = 5
+	
+	Collider = HC(100, on_collide)
+	hardon_ball = Collider:addCircle(objects.ball.body:getX(), objects.ball.body:getY(), 20)
+	hardon_player1 = Collider:addCircle(objects.player1.body:getX(), objects.player1.body:getY(), 28)
+	hardon_player2 = Collider:addCircle(objects.player2.body:getX(), objects.player2.body:getY(), 28)
 	
 	remainingTime = 3
 	roundStart1 = false
@@ -32,5 +38,6 @@ function load_variables()
 	missSound =  "sounds/miss.wav"
 	gameOverSound = "sounds/game_over.wav"
 	matchBallSound = "sounds/matchball.wav"
+	collisionSound = "sounds/collision.wav"
 	
 end

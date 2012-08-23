@@ -177,3 +177,19 @@ function draw_countdown()
 		end
 	end
 end
+
+function on_collide(dt, shape_a, shape_b)
+	if shape_a == hardon_ball and shape_b == hardon_player1 then
+		TEsound.playLooping(collisionSound, "sfx", 1)
+	elseif shape_a == hardon_ball and shape_b == hardon_player2 then
+		TEsound.playLooping(collisionSound, "sfx", 1)
+	else
+		return
+	end
+end
+
+function hardon_move()
+	hardon_player1:moveTo(objects.player1.body:getX(), objects.player1.body:getY())
+	hardon_player2:moveTo(objects.player2.body:getX(), objects.player2.body:getY())
+	hardon_ball:moveTo(objects.ball.body:getX(), objects.ball.body:getY())
+end
