@@ -15,7 +15,7 @@ function player2_ai()
 end
 
 function draw_winner()
-	if objects.player1.score >= maxpoints and objects.player1.score - objects.player2.score >= 2 then
+	if objects.player1.score >= maxpoints and objects.player1.score - objects.player2.score >= 2 then		
 		love.graphics.setColor(255,255,255)
 		love.graphics.setFont(font2)
 		love.graphics.printf("Player 1 wins!", screenWidth / 4, screenHeight / 3 - 15, screenWidth / 2, 'center')
@@ -26,7 +26,7 @@ function draw_winner()
 		begin_player_1 = false
 		begin_player_2 = false
 		winner = 1
-	elseif objects.player2.score >= maxpoints and objects.player2.score - objects.player1.score >= 2 then
+	elseif objects.player2.score >= maxpoints and objects.player2.score - objects.player1.score >= 2 then		
 		love.graphics.setColor(255,255,255)
 		love.graphics.setFont(font2)
 		love.graphics.printf("Player 2 wins!", screenWidth / 4, screenHeight / 3 - 15, screenWidth / 2, 'center')
@@ -57,7 +57,9 @@ function controls()
 		if objects.player1.body:getY() > screenHeight - 55 and key == "w" and winner == 0 and remainingTime == 3 then
 			objects.player1.body:applyLinearImpulse(0, -1300)
 			TEsound.playLooping(jumpSound, "sfx", 1)
-		elseif key == "r" and winner == 1 then
+		elseif key == "r" and winner == 1 then		
+			begin_player_1 = false
+			begin_player_2 = false
 			objects.player1.score = 0
 			objects.player2.score = 0
 			objects.ball.body:setActive(true)
@@ -93,24 +95,32 @@ function start_game()
 	if begin_player_1 == true then
 		objects.ball.body:applyLinearImpulse(64, 0)
 		begin_player_1 = false
-	elseif begin_player_2 == true then
+	elseif begin_player_2 == true and winner == 0 then
 		objects.ball.body:applyLinearImpulse(-64, 0)
 		begin_player_2 = false
 	end
 end
 
 function increase_score()
-		if objects.ball.body:getY() > screenHeight - 40 then
-			if objects.ball.body:getX() > screenWidth / 2 then
-				objects.player1.score = objects.player1.score + 1
-				TEsound.playLooping(hitSound, "sfx", 1)
-				startRound1 = true
-			elseif objects.ball.body:getX() < screenWidth / 2 then
-				objects.player2.score = objects.player2.score + 1
-				TEsound.playLooping(missSound, "sfx", 1)
-				startRound2 = true
+	if objects.ball.body:getY() > screenHeight - 40 then
+		if objects.ball.body:getX() > screenWidth / 2 then
+			objects.player1.score = objects.player1.score + 1
+			TEsound.playLooping(hitSound, "sfx", 1)
+			if objects.player1.score >= maxpoints and objects.player1.score - objects.player2.score >= 2 then 
+				startgame = true
+			else
+				startRound1 = true 
 			end
+		elseif objects.ball.body:getX() < screenWidth / 2 then
+			objects.player2.score = objects.player2.score + 1
+			TEsound.playLooping(missSound, "sfx", 1)			
+			if objects.player2.score >= maxpoints and objects.player2.score - objects.player1.score >= 2 then 
+				startgame = true
+			else
+				startRound2 = true 
+			end			
 		end
+	end
 end
 
 function game_over_sound()	
@@ -139,12 +149,11 @@ end
 function start_round1(dt)
 	if startRound1 == true then
 		startgame = true
-		remainingTime = remainingTime - dt
+		remainingTime = remainingTime - dt * 1.5
 	end
-	
-	if remainingTime <= 1 then
-		begin_player_1 = true
+	if remainingTime <= 1 then		
 		startRound1 = false
+		begin_player_1 = true
 		remainingTime = 3
 	end
 end
@@ -154,16 +163,17 @@ function start_round2(dt)
 		startgame = true
 		remainingTime = remainingTime - dt * 1.5
 	end
-	
 	if remainingTime <= 1 then
-		begin_player_2 = true
 		startRound2 = false
+		begin_player_2 = true
 		remainingTime = 3
 	end
 end
 
 function draw_countdown()
-	if startRound1 == true or startRound2 == true and winner == 0 then
-		love.graphics.print(math.floor(remainingTime + .5), objects.ball.body:getX() - 6, objects.ball.body:getY() - 13)
+	if startRound1 == true or startRound2 == true then
+		if winner == 0 then
+			love.graphics.print(math.floor(remainingTime + .5), objects.ball.body:getX() - 6, objects.ball.body:getY() - 13)
+		end
 	end
 end

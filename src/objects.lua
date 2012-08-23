@@ -28,7 +28,7 @@ function load_objects()
 	
 	objects.mesh = {}
 	objects.mesh.body = love.physics.newBody(world, screenWidth / 2, screenHeight - screenHeight / 6)
-	objects.mesh.shape = love.physics.newRectangleShape(4, screenHeight / 3)
+	objects.mesh.shape = love.physics.newRectangleShape(4, screenHeight / 3 - 10)
 	objects.mesh.fixture = love.physics.newFixture(objects.mesh.body, objects.mesh.shape)
 	objects.mesh.fixture:setCategory(2)
 	
