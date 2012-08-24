@@ -12,10 +12,15 @@ function love.load()
 	load_objects()
 	load_variables()
 	
+	min_dt = 1/60
+	next_time = love.timer.getMicroTime()
+	
 end
 
 function love.update(dt)
 
+	next_time = next_time + min_dt
+	
 	TEsound.cleanup()
 	world:update(dt)
 	start_game()
@@ -68,6 +73,13 @@ function love.draw()
 	draw_player1()
 	draw_countdown()
 	draw_AI()
+	
+	local cur_time = love.timer.getMicroTime()
+		if next_time <= cur_time then
+			next_time = cur_time
+		return
+	end
+	love.timer.sleep(1*(next_time - cur_time))
 	
 	
 	--love.graphics.setColor(255,50,230)

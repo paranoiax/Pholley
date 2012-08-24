@@ -36,4 +36,4 @@ There will be lots of things to be added. For example:
 * [HardonCollider](https://github.com/vrld/HardonCollider)
 * [Box2D](http://box2d.org/)
 * [TEsound](https://love2d.org/wiki/TEsound)
-*[AnAL](https://github.com/bartbes/love-misc-libs/tree/master/AnAL)
+* [AnAL](https://github.com/bartbes/love-misc-libs/tree/master/AnAL)
