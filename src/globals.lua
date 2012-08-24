@@ -1,6 +1,7 @@
 function load_settings()
 	font = love.graphics.newFont(22)
 	font2 = love.graphics.newFont(36)
+	font3 = love.graphics.newFont(48)
 
 	love.physics.setMeter(64)
 	world = love.physics.newWorld(0, 9.81 * 64, true)
@@ -38,6 +39,12 @@ function load_variables()
 	missSound =  "sounds/miss.wav"
 	gameOverSound = "sounds/game_over.wav"
 	matchBallSound = "sounds/matchball.wav"
-	collisionSound = "sounds/collision.wav"
+	collisionSound = "sounds/collision.wav"	
+	
+	local player1AnimImg = love.graphics.newImage("sprites/bunny.png")
+	local player2AnimImg = love.graphics.newImage("sprites/bunny_2.png")
+	
+	anim = newAnimation(player1AnimImg, 64, 64, 0.075, 0)
+	anim2 = newAnimation(player2AnimImg, 64, 64, 0.075, 0)
 	
 end

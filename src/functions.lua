@@ -173,6 +173,7 @@ end
 function draw_countdown()
 	if startRound1 == true or startRound2 == true then
 		if winner == 0 then
+			love.graphics.setFont(font)
 			love.graphics.print(math.floor(remainingTime + .5), objects.ball.body:getX() - 6, objects.ball.body:getY() - 13)
 		end
 	end
@@ -192,4 +193,41 @@ function hardon_move()
 	hardon_player1:moveTo(objects.player1.body:getX(), objects.player1.body:getY())
 	hardon_player2:moveTo(objects.player2.body:getX(), objects.player2.body:getY())
 	hardon_ball:moveTo(objects.ball.body:getX(), objects.ball.body:getY())
+end
+
+function get_AI_Velocity()
+		AIx, AIy = objects.player2.body:getLinearVelocity()
+end
+	
+function draw_player1()
+	if love.keyboard.isDown("d") and objects.player1.body:getY() > screenHeight  -50 then
+		anim:play()
+		anim:draw(objects.player1.body:getX() - 32, objects.player1.body:getY() - 32)
+	elseif love.keyboard.isDown("a") and objects.player1.body:getY() > screenHeight  -50 then
+		anim:play()
+		anim:draw(objects.player1.body:getX() - 32, objects.player1.body:getY() - 32)
+	elseif objects.player1.body:getY() < screenHeight  -50 then
+		anim:seek(1)
+		anim:stop()
+		anim:draw(objects.player1.body:getX() - 32, objects.player1.body:getY() - 32)
+	else
+		anim:seek(2)
+		anim:stop()
+		anim:draw(objects.player1.body:getX() - 32, objects.player1.body:getY() - 32)
+	end
+end
+
+function draw_AI()
+	if AIx < 0 or AIx > 0 and objects.player2.body:getY() > screenHeight -50 then
+		anim2:play()
+		anim2:draw(objects.player2.body:getX() - 32, objects.player2.body:getY() - 32)
+	elseif objects.player2.body:getY() < screenHeight - 50 then
+		anim2:seek(2)
+		anim2:stop()
+		anim2:draw(objects.player2.body:getX() - 32, objects.player2.body:getY() - 32)
+	else
+		anim2:seek(1)
+		anim2:stop()
+		anim2:draw(objects.player2.body:getX() - 32, objects.player2.body:getY() - 32)
+	end
 end
