@@ -5,6 +5,7 @@ function load_settings()
 
 	love.physics.setMeter(64)
 	world = love.physics.newWorld(0, 9.81 * 64, true)
+	world:setCallbacks(beginCallback)
 	
 	screenWidth = love.graphics.getWidth()
 	screenHeight = love.graphics.getHeight()
@@ -17,12 +18,7 @@ function load_variables()
 	matchBallSoundPlayed = false
 	startgame = true
 	winner = 0
-	maxpoints = 5
-	
-	Collider = HC(100, on_collide)
-	hardon_ball = Collider:addCircle(objects.ball.body:getX(), objects.ball.body:getY(), 20)
-	hardon_player1 = Collider:addCircle(objects.player1.body:getX(), objects.player1.body:getY(), 28)
-	hardon_player2 = Collider:addCircle(objects.player2.body:getX(), objects.player2.body:getY(), 28)
+	maxpoints = 5	
 	
 	remainingTime = 3
 	roundStart1 = false

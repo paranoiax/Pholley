@@ -50,6 +50,7 @@ function load_objects()
 	objects.ball.body:setGravityScale(2.0)
 	objects.ball.body:setLinearDamping(1.5)
 	objects.ball.body:setAngularDamping(1.5)
+	objects.ball.fixture:setUserData("ball")
 	
 	objects.player1 = {}
 	objects.player1.body = love.physics.newBody(world, screenWidth / 8 * 3, screenHeight - 50, "dynamic")
@@ -60,6 +61,7 @@ function load_objects()
 	objects.player1.fixture:setRestitution(0)
 	objects.player1.body:setFixedRotation(true)
 	objects.player1.body:setLinearDamping(4)
+	objects.player1.fixture:setUserData("player")
 	
 	objects.player2 = {}
 	objects.player2.body = love.physics.newBody(world, screenWidth - screenWidth / 8 * 3, screenHeight - 50, "dynamic")
@@ -71,6 +73,7 @@ function load_objects()
 	objects.player2.body:setFixedRotation(true)
 	objects.player2.body:setLinearDamping(1.5)
 	objects.player2.fixture:setFriction(1.15) -- AI ONLY
+	objects.player2.fixture:setUserData("player")
 	
 	objects.player1.score = 0
 	objects.player2.score = 0

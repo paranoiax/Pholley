@@ -1,4 +1,4 @@
-function player2_ai()
+function player2_ai(dt)
 	if objects.ball.body:getX() > screenWidth / 2 and objects.ball.body:getX() +18 < objects.player2.body:getX() then
 		objects.player2.body:applyForce(-2000, 0)--2300
 	elseif objects.ball.body:getX() > screenWidth / 2 and objects.ball.body:getX() +18 > objects.player2.body:getX() and objects.ball.body:getX() < screenWidth - 81 then
@@ -179,22 +179,6 @@ function draw_countdown()
 	end
 end
 
-function on_collide(dt, shape_a, shape_b)
-	if shape_a == hardon_ball and shape_b == hardon_player1 then
-		TEsound.playLooping(collisionSound, "sfx", 1)
-	elseif shape_a == hardon_ball and shape_b == hardon_player2 then
-		TEsound.playLooping(collisionSound, "sfx", 1)
-	else
-		return
-	end
-end
-
-function hardon_move()
-	hardon_player1:moveTo(objects.player1.body:getX(), objects.player1.body:getY())
-	hardon_player2:moveTo(objects.player2.body:getX(), objects.player2.body:getY())
-	hardon_ball:moveTo(objects.ball.body:getX(), objects.ball.body:getY())
-end
-
 function get_AI_Velocity()
 		AIx, AIy = objects.player2.body:getLinearVelocity()
 end
@@ -230,4 +214,14 @@ function draw_AI()
 		anim2:stop()
 		anim2:draw(objects.player2.body:getX() - 32, objects.player2.body:getY() - 32)
 	end
+end
+
+function beginCallback(fixture1, fixture2, contact)
+	
+	if fixture1:getUserData() == "ball" or fixture2:getUserData() == "ball" then
+		if fixture1:getUserData() == "player" or fixture2:getUserData() == "player" then
+			TEsound.playLooping(collisionSound, "sfx", 1)
+		end
+	end
+	
 end
